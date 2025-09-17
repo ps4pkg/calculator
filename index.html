@@ -1,641 +1,1593 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta name="robots" content="noindex">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta name="robots" content="noindex" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PKG size calculator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
     <style>
-        .container {
-            padding-bottom: 200px;
-        }
+      .container {
+        padding-bottom: 200px;
+      }
     </style>
     <div class="container mt-3">
-        <h1 class="mb-3">PKG Size Calculator</h1>
-        
-        <!-- Sort Controls -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="sortBy" class="form-label">Sort by:</label>
-                <select class="form-select" id="sortBy">
-                    <option value="alphabetical">Alphabetical</option>
-                    <option value="size">Size</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label for="sortOrder" class="form-label">Order:</label>
-                <select class="form-select" id="sortOrder">
-                    <option value="asc">Ascending</option>
-                    <option value="desc">Descending</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Checkboxes will go here -->
-        <div id="itemsContainer">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Backpack hero" data-size="390070272" id="Backpack_hero">
-            <label class="form-check-label" for="Backpack_hero">Backpack hero</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Balatro" data-size="292814848" id="Balatro">
-            <label class="form-check-label" for="Balatro">Balatro</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Bomba Patch 2025" data-size="2578907136" id="Bomba_Patch_2025">
-            <label class="form-check-label" for="Bomba_Patch_2025">Bomba Patch 2025</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Broforce" data-size="458752000" id="Broforce">
-            <label class="form-check-label" for="Broforce">Broforce</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Capcom Fighting Collection" data-size="3626303488" id="Capcom_Fighting_Collection">
-            <label class="form-check-label" for="Capcom_Fighting_Collection">Capcom Fighting Collection</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Capcom Fighting Collection 2" data-size="3784835072" id="Capcom_Fighting_Collection_2">
-            <label class="form-check-label" for="Capcom_Fighting_Collection_2">Capcom Fighting Collection 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Celeste" data-size="1618804736" id="Celeste">
-            <label class="form-check-label" for="Celeste">Celeste</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Cities Skylines" data-size="8766423040" id="Cities_Skylines">
-            <label class="form-check-label" for="Cities_Skylines">Cities Skylines</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="COD Black Ops 3" data-size="115242303488" id="COD_Black_Ops_3">
-            <label class="form-check-label" for="COD_Black_Ops_3">COD Black Ops 3</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Crash Bandicoot 4" data-size="45358776320" id="Crash_Bandicoot_4">
-            <label class="form-check-label" for="Crash_Bandicoot_4">Crash Bandicoot 4</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Crash Bandicoot Nsane Trilogy" data-size="28186574848" id="Crash_Bandicoot_Nsane_Trilogy">
-            <label class="form-check-label" for="Crash_Bandicoot_Nsane_Trilogy">Crash Bandicoot Nsane Trilogy</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Crash Team Racing" data-size="22051356672" id="Crash_Team_Racing">
-            <label class="form-check-label" for="Crash_Team_Racing">Crash Team Racing</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Dead Cells" data-size="2497445888" id="Dead_Cells">
-            <label class="form-check-label" for="Dead_Cells">Dead Cells</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Detroit Become Human" data-size="43110105088" id="Detroit_Become_Human">
-            <label class="form-check-label" for="Detroit_Become_Human">Detroit Become Human</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Disney Classic Games" data-size="2396127232" id="Disney_Classic_Games">
-            <label class="form-check-label" for="Disney_Classic_Games">Disney Classic Games</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Doom 1 e 2" data-size="1964638208" id="Doom_1_e_2">
-            <label class="form-check-label" for="Doom_1_e_2">Doom 1 e 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Double Dragon" data-size="2037841920" id="Double_Dragon">
-            <label class="form-check-label" for="Double_Dragon">Double Dragon</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Dragon Ball Z Kakarot" data-size="109953220608" id="Dragon_Ball_Z_Kakarot">
-            <label class="form-check-label" for="Dragon_Ball_Z_Kakarot">Dragon Ball Z Kakarot</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Dragon Ball Z Budokai 3" data-size="1791688704" id="Dragon_Ball_Z_Budokai_3">
-            <label class="form-check-label" for="Dragon_Ball_Z_Budokai_3">Dragon Ball Z Budokai 3</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Fatal Fury City of the Wolves" data-size="44245647360" id="Fatal_Fury_City_of_the_Wolves">
-            <label class="form-check-label" for="Fatal_Fury_City_of_the_Wolves">Fatal Fury City of the Wolves</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="FC 25" data-size="52269350912" id="FC_25">
-            <label class="form-check-label" for="FC_25">FC 25</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="FEZ" data-size="240123904" id="FEZ">
-            <label class="form-check-label" for="FEZ">FEZ</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Fifa 22" data-size="41861775360" id="Fifa_22">
-            <label class="form-check-label" for="Fifa_22">Fifa 22</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Final Fantasy Pixel Remaster" data-size="1171324928" id="Final_Fantasy_Pixel_Remaster">
-            <label class="form-check-label" for="Final_Fantasy_Pixel_Remaster">Final Fantasy Pixel Remaster</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Forager" data-size="421462016" id="Forager">
-            <label class="form-check-label" for="Forager">Forager</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Gas Guzzlers" data-size="9213509632" id="Gas_Guzzlers">
-            <label class="form-check-label" for="Gas_Guzzlers">Gas Guzzlers</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="God of War" data-size="46702723072" id="God_of_War">
-            <label class="form-check-label" for="God_of_War">God of War</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="God of War Ragnarok" data-size="148817379328" id="God_of_War_Ragnarok">
-            <label class="form-check-label" for="God_of_War_Ragnarok">God of War Ragnarok</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="GTA 5" data-size="94670815232" id="GTA_5">
-            <label class="form-check-label" for="GTA_5">GTA 5</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="GTA Vice City" data-size="10974658560" id="GTA_Vice_City">
-            <label class="form-check-label" for="GTA_Vice_City">GTA Vice City</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Hell Warders" data-size="2968911872" id="Hell_Warders">
-            <label class="form-check-label" for="Hell_Warders">Hell Warders</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Hollow Knight" data-size="1284505600" id="Hollow_Knight">
-            <label class="form-check-label" for="Hollow_Knight">Hollow Knight</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Hollow Knight Silksong" data-size="4346413056" id="Hollow_Knight_Silksong">
-            <label class="form-check-label" for="Hollow_Knight_Silksong">Hollow Knight Silksong</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Horizon Forbidden West" data-size="79142977536" id="Horizon_Forbidden_West">
-            <label class="form-check-label" for="Horizon_Forbidden_West">Horizon Forbidden West</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Horizon Zero Dawn" data-size="48158539776" id="Horizon_Zero_Dawn">
-            <label class="form-check-label" for="Horizon_Zero_Dawn">Horizon Zero Dawn</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Indivisible" data-size="5828182016" id="Indivisible">
-            <label class="form-check-label" for="Indivisible">Indivisible</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Lego Brawls" data-size="4765122560" id="Lego_Brawls">
-            <label class="form-check-label" for="Lego_Brawls">Lego Brawls</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Live a Live" data-size="5103878144" id="Live_a_Live">
-            <label class="form-check-label" for="Live_a_Live">Live a Live</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Lonely Mountains Downhill" data-size="1421475840" id="Lonely_Mountains_Downhill">
-            <label class="form-check-label" for="Lonely_Mountains_Downhill">Lonely Mountains Downhill</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Lost Wing" data-size="813432832" id="Lost_Wing">
-            <label class="form-check-label" for="Lost_Wing">Lost Wing</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Marvel vs Capcom Collection" data-size="3494707200" id="Marvel_vs_Capcom_Collection">
-            <label class="form-check-label" for="Marvel_vs_Capcom_Collection">Marvel vs Capcom Collection</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Medal of Honor Frontline" data-size="2918121472" id="Medal_of_Honor_Frontline">
-            <label class="form-check-label" for="Medal_of_Honor_Frontline">Medal of Honor Frontline</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Megaman 11" data-size="1952448512" id="Megaman_11">
-            <label class="form-check-label" for="Megaman_11">Megaman 11</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Megaman x8" data-size="964362240" id="Megaman_x8">
-            <label class="form-check-label" for="Megaman_x8">Megaman x8</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Melty Blood Type Lumina" data-size="10737418240" id="Melty_Blood_Type_Lumina">
-            <label class="form-check-label" for="Melty_Blood_Type_Lumina">Melty Blood Type Lumina</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Metal Slug Tactics" data-size="1420886016" id="Metal_Slug_Tactics">
-            <label class="form-check-label" for="Metal_Slug_Tactics">Metal Slug Tactics</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Mortal Kombat Armageddon" data-size="2849374208" id="Mortal_Kombat_Armageddon">
-            <label class="form-check-label" for="Mortal_Kombat_Armageddon">Mortal Kombat Armageddon</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Minecraft" data-size="5016256512" id="Minecraft">
-            <label class="form-check-label" for="Minecraft">Minecraft</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Minecraft Legends" data-size="9492299776" id="Minecraft_Legends">
-            <label class="form-check-label" for="Minecraft_Legends">Minecraft Legends</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Monster Jam Steel Titans" data-size="14629142528" id="Monster_Jam_Steel_Titans">
-            <label class="form-check-label" for="Monster_Jam_Steel_Titans">Monster Jam Steel Titans</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Naruto Ultimate Ninja 5" data-size="2087976960" id="Naruto_Ultimate_Ninja_5">
-            <label class="form-check-label" for="Naruto_Ultimate_Ninja_5">Naruto Ultimate Ninja 5</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Naruto x Boruto" data-size="44032655360" id="Naruto_x_Boruto">
-            <label class="form-check-label" for="Naruto_x_Boruto">Naruto x Boruto</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Need for Speed Heat" data-size="34414592000" id="Need_for_Speed_Heat">
-            <label class="form-check-label" for="Need_for_Speed_Heat">Need for Speed Heat</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Need for Speed Underground 2" data-size="1719140352" id="Need_for_Speed_Underground_2">
-            <label class="form-check-label" for="Need_for_Speed_Underground_2">Need for Speed Underground 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="New Super Luckys Tale" data-size="5416681472" id="New_Super_Luckys_Tale">
-            <label class="form-check-label" for="New_Super_Luckys_Tale">New Super Luckys Tale</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Nier Automata" data-size="40000946176" id="Nier_Automata">
-            <label class="form-check-label" for="Nier_Automata">Nier Automata</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Nikoderiko" data-size="21599032897" id="Nikoderiko">
-            <label class="form-check-label" for="Nikoderiko">Nikoderiko</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Ninja Gaiden Ragebound" data-size="1784545280" id="Ninja_Gaiden_Ragebound">
-            <label class="form-check-label" for="Ninja_Gaiden_Ragebound">Ninja Gaiden Ragebound</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Overcooked 2" data-size="9995485184" id="Overcooked_2">
-            <label class="form-check-label" for="Overcooked_2">Overcooked 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Patapon 3" data-size="1688862720" id="Patapon_3">
-            <label class="form-check-label" for="Patapon_3">Patapon 3</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Persona 4" data-size="8290041856" id="Persona_4">
-            <label class="form-check-label" for="Persona_4">Persona 4</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Pocket Bravery" data-size="6632308736" id="Pocket_Bravery">
-            <label class="form-check-label" for="Pocket_Bravery">Pocket Bravery</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Red Dead Redemption 2" data-size="105917710336" id="Red_Dead_Redemption_2">
-            <label class="form-check-label" for="Red_Dead_Redemption_2">Red Dead Redemption 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Resident Evil 4 Remake" data-size="41207398400" id="Resident_Evil_4_Remake">
-            <label class="form-check-label" for="Resident_Evil_4_Remake">Resident Evil 4 Remake</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Samurai Jack" data-size="4432461824" id="Samurai_Jack">
-            <label class="form-check-label" for="Samurai_Jack">Samurai Jack</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Samurai Shodown" data-size="50901155840" id="Samurai_Shodown">
-            <label class="form-check-label" for="Samurai_Shodown">Samurai Shodown</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Samurai Warriors 4" data-size="21218590720" id="Samurai_Warriors_4">
-            <label class="form-check-label" for="Samurai_Warriors_4">Samurai Warriors 4</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Shadow of the Colossus" data-size="13588299776" id="Shadow_of_the_Colossus">
-            <label class="form-check-label" for="Shadow_of_the_Colossus">Shadow of the Colossus</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Shinobi" data-size="9782493184" id="Shinobi">
-            <label class="form-check-label" for="Shinobi">Shinobi</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Skullgirls 2" data-size="3441098752" id="Skullgirls_2">
-            <label class="form-check-label" for="Skullgirls_2">Skullgirls 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Sonic X Shadow Generations" data-size="30867390464" id="Sonic_X_Shadow_Generations">
-            <label class="form-check-label" for="Sonic_X_Shadow_Generations">Sonic X Shadow Generations</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Spider-man" data-size="66521923584" id="Spider_man">
-            <label class="form-check-label" for="Spider_man">Spider-man</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Spider-man Miles Morales" data-size="73469460480" id="Spider_man_Miles_Morales">
-            <label class="form-check-label" for="Spider_man_Miles_Morales">Spider-man Miles Morales</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Stardew Valley" data-size="881721344" id="Stardew_Valley">
-            <label class="form-check-label" for="Stardew_Valley">Stardew Valley</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="SteamWorld Dig" data-size="90243072" id="SteamWorld_Dig">
-            <label class="form-check-label" for="SteamWorld_Dig">SteamWorld Dig</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="SteamWorld Dig 2" data-size="207224832" id="SteamWorld_Dig_2">
-            <label class="form-check-label" for="SteamWorld_Dig_2">SteamWorld Dig 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Street Fighter 30 Anniversary" data-size="5135466496" id="Street_Fighter_30_Anniversary">
-            <label class="form-check-label" for="Street_Fighter_30_Anniversary">Street Fighter 30 Anniversary</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Street Fighter 6" data-size="66218754048" id="Street_Fighter_6">
-            <label class="form-check-label" for="Street_Fighter_6">Street Fighter 6</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Street Fighter Alpha 3 Max" data-size="149684224" id="Street_Fighter_Alpha_3_Max">
-            <label class="form-check-label" for="Street_Fighter_Alpha_3_Max">Street Fighter Alpha 3 Max</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="SUPERHOT" data-size="1836253184" id="SUPERHOT">
-            <label class="form-check-label" for="SUPERHOT">SUPERHOT</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tartarugas Ninja Collection" data-size="8631877632" id="Tartarugas_Ninja_Collection">
-            <label class="form-check-label" for="Tartarugas_Ninja_Collection">Tartarugas Ninja Collection</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tartarugas Ninja Shredders Revenge" data-size="1386020864" id="Tartarugas_Ninja_Shredders_Revenge">
-            <label class="form-check-label" for="Tartarugas_Ninja_Shredders_Revenge">Tartarugas Ninja Shredders Revenge</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tartarugas Ninja Unleashed" data-size="8854110208" id="Tartarugas_Ninja_Unleashed">
-            <label class="form-check-label" for="Tartarugas_Ninja_Unleashed">Tartarugas Ninja Unleashed</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tartarugas Ninja Wrath" data-size="4175953920" id="Tartarugas_Ninja_Wrath">
-            <label class="form-check-label" for="Tartarugas_Ninja_Wrath">Tartarugas Ninja Wrath</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tekken 3" data-size="539099136" id="Tekken_3">
-            <label class="form-check-label" for="Tekken_3">Tekken 3</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tekken 7" data-size="54195978240" id="Tekken_7">
-            <label class="form-check-label" for="Tekken_7">Tekken 7</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="The Sims 4" data-size="46575058944" id="The_Sims_4">
-            <label class="form-check-label" for="The_Sims_4">The Sims 4</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tony Hawk's 3+4" data-size="36982816768" id="Tony_Hawk_3_4">
-            <label class="form-check-label" for="Tony_Hawk_3_4">Tony Hawk's 3+4</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tony Hawks Pro Skater 1+2" data-size="25797722112" id="Tony_Hawks_Pro_Skater_1_2">
-            <label class="form-check-label" for="Tony_Hawks_Pro_Skater_1_2">Tony Hawks Pro Skater 1+2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Tricky Towers" data-size="282001408" id="Tricky_Towers">
-            <label class="form-check-label" for="Tricky_Towers">Tricky Towers</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Umihara Kawase BaZooKa" data-size="623050752" id="Umihara_Kawase_BaZooKa">
-            <label class="form-check-label" for="Umihara_Kawase_BaZooKa">Umihara Kawase BaZooKa</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Unpacking" data-size="810811392" id="Unpacking">
-            <label class="form-check-label" for="Unpacking">Unpacking</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Unravel Two" data-size="3313762304" id="Unravel_Two">
-            <label class="form-check-label" for="Unravel_Two">Unravel Two</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Untitled Goose Game" data-size="1005387776" id="Untitled_Goose_Game">
-            <label class="form-check-label" for="Untitled_Goose_Game">Untitled Goose Game</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Watch Dogs" data-size="22126329856" id="Watch_Dogs">
-            <label class="form-check-label" for="Watch_Dogs">Watch Dogs</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Watch Dogs 2" data-size="39297941504" id="Watch_Dogs_2">
-            <label class="form-check-label" for="Watch_Dogs_2">Watch Dogs 2</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Zombie Driver" data-size="1420296192" id="Zombie_Driver">
-            <label class="form-check-label" for="Zombie_Driver">Zombie Driver</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="COD Black Ops Cold War" data-size="106353721344" id="COD_Black_Ops_Cold_War">
-            <label class="form-check-label" for="COD_Black_Ops_Cold_War">COD Black Ops Cold War</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="COD Ghosts" data-size="33557970944" id="COD_Ghosts">
-            <label class="form-check-label" for="COD_Ghosts">COD Ghosts</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Dragon Ball FighterZ" data-size="10411245568" id="Dragon_Ball_FighterZ">
-            <label class="form-check-label" for="Dragon_Ball_FighterZ">Dragon Ball FighterZ</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Ghost of Tsushima" data-size="44534661120" id="Ghost_of_Tsushima">
-            <label class="form-check-label" for="Ghost_of_Tsushima">Ghost of Tsushima</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Mortal Kombat 11" data-size="73275146240" id="Mortal_Kombat_11">
-            <label class="form-check-label" for="Mortal_Kombat_11">Mortal Kombat 11</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="Mortal Kombat XL" data-size="42844749824" id="Mortal_Kombat_XL">
-            <label class="form-check-label" for="Mortal_Kombat_XL">Mortal Kombat XL</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="folder" value="COD Black Ops 4" data-size="117920038912" id="COD_Black_Ops_4">
-            <label class="form-check-label" for="COD_Black_Ops_4">COD Black Ops 4</label>
-        </div>
-        </div>
+      <h1 class="mb-3">PKG Size Calculator</h1>
+
+      <!-- Sort Controls -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="sortBy" class="form-label">Sort by:</label>
+          <select class="form-select" id="sortBy">
+            <option value="alphabetical">Alphabetical</option>
+            <option value="size">Size</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="sortOrder" class="form-label">Order:</label>
+          <select class="form-select" id="sortOrder">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Checkboxes will go here -->
+      <div id="itemsContainer">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Backpack hero"
+            data-size="390070272"
+            id="Backpack_hero"
+          />
+          <label class="form-check-label" for="Backpack_hero"
+            >Backpack hero</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Balatro"
+            data-size="292814848"
+            id="Balatro"
+          />
+          <label class="form-check-label" for="Balatro">Balatro</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Battlefield 1"
+            data-size="71874772992"
+            id="Battlefield_1"
+          />
+          <label class="form-check-label" for="Battlefield_1"
+            >Battlefield 1</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Battlefield 4"
+            data-size="33663352832"
+            id="Battlefield_4"
+          />
+          <label class="form-check-label" for="Battlefield_4"
+            >Battlefield 4</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Battlefield V"
+            data-size="104823914496"
+            id="Battlefield_V"
+          />
+          <label class="form-check-label" for="Battlefield_V"
+            >Battlefield V</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Bomba Patch 2025"
+            data-size="2578907136"
+            id="Bomba_Patch_2025"
+          />
+          <label class="form-check-label" for="Bomba_Patch_2025"
+            >Bomba Patch 2025</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Broforce"
+            data-size="458752000"
+            id="Broforce"
+          />
+          <label class="form-check-label" for="Broforce">Broforce</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Capcom Fighting Collection"
+            data-size="3626303488"
+            id="Capcom_Fighting_Collection"
+          />
+          <label class="form-check-label" for="Capcom_Fighting_Collection"
+            >Capcom Fighting Collection</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Capcom Fighting Collection 2"
+            data-size="3784835072"
+            id="Capcom_Fighting_Collection_2"
+          />
+          <label class="form-check-label" for="Capcom_Fighting_Collection_2"
+            >Capcom Fighting Collection 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Celeste"
+            data-size="1618804736"
+            id="Celeste"
+          />
+          <label class="form-check-label" for="Celeste">Celeste</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Cities Skylines"
+            data-size="8766423040"
+            id="Cities_Skylines"
+          />
+          <label class="form-check-label" for="Cities_Skylines"
+            >Cities Skylines</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="COD Black Ops 3"
+            data-size="115242303488"
+            id="COD_Black_Ops_3"
+          />
+          <label class="form-check-label" for="COD_Black_Ops_3"
+            >COD Black Ops 3</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Crash Bandicoot 4"
+            data-size="45358776320"
+            id="Crash_Bandicoot_4"
+          />
+          <label class="form-check-label" for="Crash_Bandicoot_4"
+            >Crash Bandicoot 4</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Crash Bandicoot Nsane Trilogy"
+            data-size="28186574848"
+            id="Crash_Bandicoot_Nsane_Trilogy"
+          />
+          <label class="form-check-label" for="Crash_Bandicoot_Nsane_Trilogy"
+            >Crash Bandicoot Nsane Trilogy</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Crash Team Racing"
+            data-size="22051356672"
+            id="Crash_Team_Racing"
+          />
+          <label class="form-check-label" for="Crash_Team_Racing"
+            >Crash Team Racing</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Dead Cells"
+            data-size="2497445888"
+            id="Dead_Cells"
+          />
+          <label class="form-check-label" for="Dead_Cells">Dead Cells</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Detroit Become Human"
+            data-size="43110105088"
+            id="Detroit_Become_Human"
+          />
+          <label class="form-check-label" for="Detroit_Become_Human"
+            >Detroit Become Human</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Disney Classic Games"
+            data-size="2396127232"
+            id="Disney_Classic_Games"
+          />
+          <label class="form-check-label" for="Disney_Classic_Games"
+            >Disney Classic Games</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Doom 1 e 2"
+            data-size="1964638208"
+            id="Doom_1_e_2"
+          />
+          <label class="form-check-label" for="Doom_1_e_2">Doom 1 e 2</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Double Dragon"
+            data-size="2037841920"
+            id="Double_Dragon"
+          />
+          <label class="form-check-label" for="Double_Dragon"
+            >Double Dragon</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Dragon Ball Z Kakarot"
+            data-size="109953220608"
+            id="Dragon_Ball_Z_Kakarot"
+          />
+          <label class="form-check-label" for="Dragon_Ball_Z_Kakarot"
+            >Dragon Ball Z Kakarot</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Dragon Ball Z Budokai 3"
+            data-size="1791688704"
+            id="Dragon_Ball_Z_Budokai_3"
+          />
+          <label class="form-check-label" for="Dragon_Ball_Z_Budokai_3"
+            >Dragon Ball Z Budokai 3</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Fatal Fury City of the Wolves"
+            data-size="44245647360"
+            id="Fatal_Fury_City_of_the_Wolves"
+          />
+          <label class="form-check-label" for="Fatal_Fury_City_of_the_Wolves"
+            >Fatal Fury City of the Wolves</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="FC 25"
+            data-size="52269350912"
+            id="FC_25"
+          />
+          <label class="form-check-label" for="FC_25">FC 25</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="FEZ"
+            data-size="240123904"
+            id="FEZ"
+          />
+          <label class="form-check-label" for="FEZ">FEZ</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Fifa 22"
+            data-size="41861775360"
+            id="Fifa_22"
+          />
+          <label class="form-check-label" for="Fifa_22">Fifa 22</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Final Fantasy Pixel Remaster"
+            data-size="1171324928"
+            id="Final_Fantasy_Pixel_Remaster"
+          />
+          <label class="form-check-label" for="Final_Fantasy_Pixel_Remaster"
+            >Final Fantasy Pixel Remaster</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Forager"
+            data-size="421462016"
+            id="Forager"
+          />
+          <label class="form-check-label" for="Forager">Forager</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Gas Guzzlers"
+            data-size="9213509632"
+            id="Gas_Guzzlers"
+          />
+          <label class="form-check-label" for="Gas_Guzzlers"
+            >Gas Guzzlers</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="God of War"
+            data-size="46702723072"
+            id="God_of_War"
+          />
+          <label class="form-check-label" for="God_of_War">God of War</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="God of War Ragnarok"
+            data-size="148817379328"
+            id="God_of_War_Ragnarok"
+          />
+          <label class="form-check-label" for="God_of_War_Ragnarok"
+            >God of War Ragnarok</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="GTA 5"
+            data-size="94670815232"
+            id="GTA_5"
+          />
+          <label class="form-check-label" for="GTA_5">GTA 5</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="GTA Vice City"
+            data-size="10974658560"
+            id="GTA_Vice_City"
+          />
+          <label class="form-check-label" for="GTA_Vice_City"
+            >GTA Vice City</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Hell Warders"
+            data-size="2968911872"
+            id="Hell_Warders"
+          />
+          <label class="form-check-label" for="Hell_Warders"
+            >Hell Warders</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Hollow Knight"
+            data-size="1284505600"
+            id="Hollow_Knight"
+          />
+          <label class="form-check-label" for="Hollow_Knight"
+            >Hollow Knight</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Hollow Knight Silksong"
+            data-size="4346413056"
+            id="Hollow_Knight_Silksong"
+          />
+          <label class="form-check-label" for="Hollow_Knight_Silksong"
+            >Hollow Knight Silksong</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Horizon Forbidden West"
+            data-size="79142977536"
+            id="Horizon_Forbidden_West"
+          />
+          <label class="form-check-label" for="Horizon_Forbidden_West"
+            >Horizon Forbidden West</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Horizon Zero Dawn"
+            data-size="48158539776"
+            id="Horizon_Zero_Dawn"
+          />
+          <label class="form-check-label" for="Horizon_Zero_Dawn"
+            >Horizon Zero Dawn</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Indivisible"
+            data-size="5828182016"
+            id="Indivisible"
+          />
+          <label class="form-check-label" for="Indivisible">Indivisible</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Lego Brawls"
+            data-size="4765122560"
+            id="Lego_Brawls"
+          />
+          <label class="form-check-label" for="Lego_Brawls">Lego Brawls</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Live a Live"
+            data-size="5103878144"
+            id="Live_a_Live"
+          />
+          <label class="form-check-label" for="Live_a_Live">Live a Live</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Lonely Mountains Downhill"
+            data-size="1421475840"
+            id="Lonely_Mountains_Downhill"
+          />
+          <label class="form-check-label" for="Lonely_Mountains_Downhill"
+            >Lonely Mountains Downhill</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Lost Wing"
+            data-size="813432832"
+            id="Lost_Wing"
+          />
+          <label class="form-check-label" for="Lost_Wing">Lost Wing</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Marvel vs Capcom Collection"
+            data-size="3494707200"
+            id="Marvel_vs_Capcom_Collection"
+          />
+          <label class="form-check-label" for="Marvel_vs_Capcom_Collection"
+            >Marvel vs Capcom Collection</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Medal of Honor Frontline"
+            data-size="2918121472"
+            id="Medal_of_Honor_Frontline"
+          />
+          <label class="form-check-label" for="Medal_of_Honor_Frontline"
+            >Medal of Honor Frontline</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Megaman 11"
+            data-size="1952448512"
+            id="Megaman_11"
+          />
+          <label class="form-check-label" for="Megaman_11">Megaman 11</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Megaman x8"
+            data-size="964362240"
+            id="Megaman_x8"
+          />
+          <label class="form-check-label" for="Megaman_x8">Megaman x8</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Melty Blood Type Lumina"
+            data-size="10737418240"
+            id="Melty_Blood_Type_Lumina"
+          />
+          <label class="form-check-label" for="Melty_Blood_Type_Lumina"
+            >Melty Blood Type Lumina</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Metal Slug Tactics"
+            data-size="1420886016"
+            id="Metal_Slug_Tactics"
+          />
+          <label class="form-check-label" for="Metal_Slug_Tactics"
+            >Metal Slug Tactics</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Mortal Kombat Armageddon"
+            data-size="2849374208"
+            id="Mortal_Kombat_Armageddon"
+          />
+          <label class="form-check-label" for="Mortal_Kombat_Armageddon"
+            >Mortal Kombat Armageddon</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Minecraft"
+            data-size="5016256512"
+            id="Minecraft"
+          />
+          <label class="form-check-label" for="Minecraft">Minecraft</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Minecraft Legends"
+            data-size="9492299776"
+            id="Minecraft_Legends"
+          />
+          <label class="form-check-label" for="Minecraft_Legends"
+            >Minecraft Legends</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Monster Jam Steel Titans"
+            data-size="14629142528"
+            id="Monster_Jam_Steel_Titans"
+          />
+          <label class="form-check-label" for="Monster_Jam_Steel_Titans"
+            >Monster Jam Steel Titans</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Naruto Ultimate Ninja 5"
+            data-size="2087976960"
+            id="Naruto_Ultimate_Ninja_5"
+          />
+          <label class="form-check-label" for="Naruto_Ultimate_Ninja_5"
+            >Naruto Ultimate Ninja 5</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Naruto x Boruto"
+            data-size="44032655360"
+            id="Naruto_x_Boruto"
+          />
+          <label class="form-check-label" for="Naruto_x_Boruto"
+            >Naruto x Boruto</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Need for Speed Heat"
+            data-size="34414592000"
+            id="Need_for_Speed_Heat"
+          />
+          <label class="form-check-label" for="Need_for_Speed_Heat"
+            >Need for Speed Heat</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Need for Speed Underground 2"
+            data-size="1719140352"
+            id="Need_for_Speed_Underground_2"
+          />
+          <label class="form-check-label" for="Need_for_Speed_Underground_2"
+            >Need for Speed Underground 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="New Super Luckys Tale"
+            data-size="5416681472"
+            id="New_Super_Luckys_Tale"
+          />
+          <label class="form-check-label" for="New_Super_Luckys_Tale"
+            >New Super Luckys Tale</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Nier Automata"
+            data-size="40000946176"
+            id="Nier_Automata"
+          />
+          <label class="form-check-label" for="Nier_Automata"
+            >Nier Automata</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Nikoderiko"
+            data-size="21599032897"
+            id="Nikoderiko"
+          />
+          <label class="form-check-label" for="Nikoderiko">Nikoderiko</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Ninja Gaiden Ragebound"
+            data-size="1784545280"
+            id="Ninja_Gaiden_Ragebound"
+          />
+          <label class="form-check-label" for="Ninja_Gaiden_Ragebound"
+            >Ninja Gaiden Ragebound</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Overcooked 2"
+            data-size="9995485184"
+            id="Overcooked_2"
+          />
+          <label class="form-check-label" for="Overcooked_2"
+            >Overcooked 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Patapon 3"
+            data-size="1688862720"
+            id="Patapon_3"
+          />
+          <label class="form-check-label" for="Patapon_3">Patapon 3</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Persona 4"
+            data-size="8290041856"
+            id="Persona_4"
+          />
+          <label class="form-check-label" for="Persona_4">Persona 4</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Pocket Bravery"
+            data-size="6632308736"
+            id="Pocket_Bravery"
+          />
+          <label class="form-check-label" for="Pocket_Bravery"
+            >Pocket Bravery</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Red Dead Redemption 2"
+            data-size="105917710336"
+            id="Red_Dead_Redemption_2"
+          />
+          <label class="form-check-label" for="Red_Dead_Redemption_2"
+            >Red Dead Redemption 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Resident Evil 4 Remake"
+            data-size="41207398400"
+            id="Resident_Evil_4_Remake"
+          />
+          <label class="form-check-label" for="Resident_Evil_4_Remake"
+            >Resident Evil 4 Remake</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Saints Row IV"
+            data-size="12323979264"
+            id="Saints_Row_IV"
+          />
+          <label class="form-check-label" for="Saints_Row_IV"
+            >Saints Row IV</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Samurai Jack"
+            data-size="4432461824"
+            id="Samurai_Jack"
+          />
+          <label class="form-check-label" for="Samurai_Jack"
+            >Samurai Jack</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Samurai Shodown"
+            data-size="50901155840"
+            id="Samurai_Shodown"
+          />
+          <label class="form-check-label" for="Samurai_Shodown"
+            >Samurai Shodown</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Samurai Warriors 4"
+            data-size="21218590720"
+            id="Samurai_Warriors_4"
+          />
+          <label class="form-check-label" for="Samurai_Warriors_4"
+            >Samurai Warriors 4</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Shadow of the Colossus"
+            data-size="13588299776"
+            id="Shadow_of_the_Colossus"
+          />
+          <label class="form-check-label" for="Shadow_of_the_Colossus"
+            >Shadow of the Colossus</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Shaq Fu"
+            data-size="9386918498"
+            id="Shaq_Fu"
+          />
+          <label class="form-check-label" for="Shaq_Fu">Shaq Fu</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Shinobi"
+            data-size="9782493184"
+            id="Shinobi"
+          />
+          <label class="form-check-label" for="Shinobi">Shinobi</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Skullgirls 2"
+            data-size="3441098752"
+            id="Skullgirls_2"
+          />
+          <label class="form-check-label" for="Skullgirls_2"
+            >Skullgirls 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Sonic X Shadow Generations"
+            data-size="30867390464"
+            id="Sonic_X_Shadow_Generations"
+          />
+          <label class="form-check-label" for="Sonic_X_Shadow_Generations"
+            >Sonic X Shadow Generations</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Spider-man"
+            data-size="66521923584"
+            id="Spider_man"
+          />
+          <label class="form-check-label" for="Spider_man">Spider-man</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Spider-man Miles Morales"
+            data-size="73469460480"
+            id="Spider_man_Miles_Morales"
+          />
+          <label class="form-check-label" for="Spider_man_Miles_Morales"
+            >Spider-man Miles Morales</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Stardew Valley"
+            data-size="881721344"
+            id="Stardew_Valley"
+          />
+          <label class="form-check-label" for="Stardew_Valley"
+            >Stardew Valley</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="SteamWorld Dig"
+            data-size="90243072"
+            id="SteamWorld_Dig"
+          />
+          <label class="form-check-label" for="SteamWorld_Dig"
+            >SteamWorld Dig</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="SteamWorld Dig 2"
+            data-size="207224832"
+            id="SteamWorld_Dig_2"
+          />
+          <label class="form-check-label" for="SteamWorld_Dig_2"
+            >SteamWorld Dig 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Street Fighter 30 Anniversary"
+            data-size="5135466496"
+            id="Street_Fighter_30_Anniversary"
+          />
+          <label class="form-check-label" for="Street_Fighter_30_Anniversary"
+            >Street Fighter 30 Anniversary</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Street Fighter 6"
+            data-size="66218754048"
+            id="Street_Fighter_6"
+          />
+          <label class="form-check-label" for="Street_Fighter_6"
+            >Street Fighter 6</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Street Fighter Alpha 3 Max"
+            data-size="149684224"
+            id="Street_Fighter_Alpha_3_Max"
+          />
+          <label class="form-check-label" for="Street_Fighter_Alpha_3_Max"
+            >Street Fighter Alpha 3 Max</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="SUPERHOT"
+            data-size="1836253184"
+            id="SUPERHOT"
+          />
+          <label class="form-check-label" for="SUPERHOT">SUPERHOT</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tartarugas Ninja Collection"
+            data-size="8631877632"
+            id="Tartarugas_Ninja_Collection"
+          />
+          <label class="form-check-label" for="Tartarugas_Ninja_Collection"
+            >Tartarugas Ninja Collection</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tartarugas Ninja Shredders Revenge"
+            data-size="1386020864"
+            id="Tartarugas_Ninja_Shredders_Revenge"
+          />
+          <label
+            class="form-check-label"
+            for="Tartarugas_Ninja_Shredders_Revenge"
+            >Tartarugas Ninja Shredders Revenge</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tartarugas Ninja Unleashed"
+            data-size="8854110208"
+            id="Tartarugas_Ninja_Unleashed"
+          />
+          <label class="form-check-label" for="Tartarugas_Ninja_Unleashed"
+            >Tartarugas Ninja Unleashed</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tartarugas Ninja Wrath"
+            data-size="4175953920"
+            id="Tartarugas_Ninja_Wrath"
+          />
+          <label class="form-check-label" for="Tartarugas_Ninja_Wrath"
+            >Tartarugas Ninja Wrath</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tekken 3"
+            data-size="539099136"
+            id="Tekken_3"
+          />
+          <label class="form-check-label" for="Tekken_3">Tekken 3</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tekken 7"
+            data-size="54195978240"
+            id="Tekken_7"
+          />
+          <label class="form-check-label" for="Tekken_7">Tekken 7</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="The Sims 4"
+            data-size="46575058944"
+            id="The_Sims_4"
+          />
+          <label class="form-check-label" for="The_Sims_4">The Sims 4</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tony Hawk's 3+4"
+            data-size="36982816768"
+            id="Tony_Hawk_3_4"
+          />
+          <label class="form-check-label" for="Tony_Hawk_3_4"
+            >Tony Hawk's 3+4</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tony Hawks Pro Skater 1+2"
+            data-size="25797722112"
+            id="Tony_Hawks_Pro_Skater_1_2"
+          />
+          <label class="form-check-label" for="Tony_Hawks_Pro_Skater_1_2"
+            >Tony Hawks Pro Skater 1+2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Tricky Towers"
+            data-size="282001408"
+            id="Tricky_Towers"
+          />
+          <label class="form-check-label" for="Tricky_Towers"
+            >Tricky Towers</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Umihara Kawase BaZooKa"
+            data-size="623050752"
+            id="Umihara_Kawase_BaZooKa"
+          />
+          <label class="form-check-label" for="Umihara_Kawase_BaZooKa"
+            >Umihara Kawase BaZooKa</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Unpacking"
+            data-size="810811392"
+            id="Unpacking"
+          />
+          <label class="form-check-label" for="Unpacking">Unpacking</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Unravel Two"
+            data-size="3313762304"
+            id="Unravel_Two"
+          />
+          <label class="form-check-label" for="Unravel_Two">Unravel Two</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Untitled Goose Game"
+            data-size="1005387776"
+            id="Untitled_Goose_Game"
+          />
+          <label class="form-check-label" for="Untitled_Goose_Game"
+            >Untitled Goose Game</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Watch Dogs"
+            data-size="22126329856"
+            id="Watch_Dogs"
+          />
+          <label class="form-check-label" for="Watch_Dogs">Watch Dogs</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Watch Dogs 2"
+            data-size="39297941504"
+            id="Watch_Dogs_2"
+          />
+          <label class="form-check-label" for="Watch_Dogs_2"
+            >Watch Dogs 2</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Zombie Driver"
+            data-size="1420296192"
+            id="Zombie_Driver"
+          />
+          <label class="form-check-label" for="Zombie_Driver"
+            >Zombie Driver</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="COD Black Ops Cold War"
+            data-size="106353721344"
+            id="COD_Black_Ops_Cold_War"
+          />
+          <label class="form-check-label" for="COD_Black_Ops_Cold_War"
+            >COD Black Ops Cold War</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="COD Ghosts"
+            data-size="33557970944"
+            id="COD_Ghosts"
+          />
+          <label class="form-check-label" for="COD_Ghosts">COD Ghosts</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Dragon Ball FighterZ"
+            data-size="10411245568"
+            id="Dragon_Ball_FighterZ"
+          />
+          <label class="form-check-label" for="Dragon_Ball_FighterZ"
+            >Dragon Ball FighterZ</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Ghost of Tsushima"
+            data-size="44534661120"
+            id="Ghost_of_Tsushima"
+          />
+          <label class="form-check-label" for="Ghost_of_Tsushima"
+            >Ghost of Tsushima</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Mortal Kombat 11"
+            data-size="73275146240"
+            id="Mortal_Kombat_11"
+          />
+          <label class="form-check-label" for="Mortal_Kombat_11"
+            >Mortal Kombat 11</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="folder"
+            value="Mortal Kombat XL"
+            data-size="42844749824"
+            id="Mortal_Kombat_XL"
+          />
+          <label class="form-check-label" for="Mortal_Kombat_XL"
+            >Mortal Kombat XL</label
+          >
+        </div>
+      </div>
     </div>
 
     <div class="fixed-bottom bg-dark text-white p-3">
-        Total Size: <span id="totalSize">0 GB</span><br>
-        Suggested Media: <span id="suggestedMedia">N/A</span><br>
-        Percentage Occupied: <span id="percentageOccupied">0.00%</span>
-        <button id="copyButton" class="btn btn-primary btn-sm ms-3">Copy Summary</button>
+      Total Size: <span id="totalSize">0 GB</span><br />
+      Suggested Media: <span id="suggestedMedia">N/A</span><br />
+      Percentage Occupied: <span id="percentageOccupied">0.00%</span>
+      <button id="copyButton" class="btn btn-primary btn-sm ms-3">
+        Copy Summary
+      </button>
     </div>
 
     <script>
-        const mediaCapacities = {
-            "DVD (Single Layer)": 4.7 * 1000 * 1000 * 1000, // 4.7 GB
-            //"DVD (Dual Layer)": 8.5 * 1000 * 1000 * 1000, // 8.5 GB
-            "BD-R (Single Layer)": 25 * 1000 * 1000 * 1000, // 25 GB
-            //"BD-R (Dual Layer)": 50 * 1000 * 1000 * 1000, // 50 GB
-            "HD 250GB": 250 * 1000 * 1000 * 1000,
-            "HD 500GB": 500 * 1000 * 1000 * 1000,
-            "HD 750GB": 750 * 1000 * 1000 * 1000,
-            "HD 1TB": 1 * 1000 * 1000 * 1000 * 1000,
-            "HD 2TB": 2 * 1000 * 1000 * 1000 * 1000,
-            "HD 4TB": 4 * 1000 * 1000 * 1000 * 1000,
-            "HD 8TB": 8 * 1000 * 1000 * 1000 * 1000
-        };
+      const mediaCapacities = {
+        "DVD (Single Layer)": 4.7 * 1000 * 1000 * 1000, // 4.7 GB
+        //"DVD (Dual Layer)": 8.5 * 1000 * 1000 * 1000, // 8.5 GB
+        "BD-R (Single Layer)": 25 * 1000 * 1000 * 1000, // 25 GB
+        //"BD-R (Dual Layer)": 50 * 1000 * 1000 * 1000, // 50 GB
+        "HD 250GB": 250 * 1000 * 1000 * 1000,
+        "HD 500GB": 500 * 1000 * 1000 * 1000,
+        "HD 750GB": 750 * 1000 * 1000 * 1000,
+        "HD 1TB": 1 * 1000 * 1000 * 1000 * 1000,
+        "HD 2TB": 2 * 1000 * 1000 * 1000 * 1000,
+        "HD 4TB": 4 * 1000 * 1000 * 1000 * 1000,
+        "HD 8TB": 8 * 1000 * 1000 * 1000 * 1000,
+      };
 
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === 0) return '0 Bytes';
+      function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return "0 Bytes";
 
-            const k = 1000;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        const k = 1000;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-        }
+        return (
+          parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
+        );
+      }
 
-        function calculateTotalSizeAndSuggestMedia() {
-            let totalSize = 0;
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="folder"]');
+      function calculateTotalSizeAndSuggestMedia() {
+        let totalSize = 0;
+        const checkboxes = document.querySelectorAll(
+          'input[type="checkbox"][name="folder"]'
+        );
 
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    totalSize += parseInt(checkbox.dataset.size);
-                }
-            });
-
-            document.getElementById('totalSize').textContent = formatBytes(totalSize);
-
-            let suggestedMedia = "No media found";
-            let mediaCapacity = 0;
-            for (const media in mediaCapacities) {
-                if (totalSize <= mediaCapacities[media]) {
-                    suggestedMedia = media;
-                    mediaCapacity = mediaCapacities[media];
-                    break;
-                }
-            }
-            document.getElementById('suggestedMedia').textContent = suggestedMedia;
-
-            let percentageOccupied = 0;
-            if (totalSize > 0 && mediaCapacity > 0) {
-                percentageOccupied = (totalSize / mediaCapacity) * 100;
-            }
-            document.getElementById('percentageOccupied').textContent = percentageOccupied.toFixed(2) + '%';
-        }
-
-        function sortItems() {
-            const sortBy = document.getElementById('sortBy').value;
-            const sortOrder = document.getElementById('sortOrder').value;
-            const container = document.getElementById('itemsContainer');
-            const items = Array.from(container.children);
-
-            items.sort((a, b) => {
-                let comparison = 0;
-                
-                if (sortBy === 'alphabetical') {
-                    const labelA = a.querySelector('label').textContent;
-                    const labelB = b.querySelector('label').textContent;
-                    comparison = labelA.localeCompare(labelB);
-                } else if (sortBy === 'size') {
-                    const sizeA = parseInt(a.querySelector('input').dataset.size);
-                    const sizeB = parseInt(b.querySelector('input').dataset.size);
-                    comparison = sizeA - sizeB;
-                }
-                
-                return sortOrder === 'desc' ? -comparison : comparison;
-            });
-
-            // Clear container and re-append sorted items
-            container.innerHTML = '';
-            items.forEach(item => {
-                container.appendChild(item);
-            });
-        }
-
-        function copyToClipboard() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="folder"]');
-            const selectedItems = [];
-            let totalSize = 0;
-
-            // Collect selected items and calculate total size
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    const sizeInBytes = parseInt(checkbox.dataset.size);
-                    const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2);
-                    selectedItems.push(`${checkbox.value} (${sizeInGB} GB)`);
-                    totalSize += sizeInBytes;
-                }
-            });
-
-            // Get summary information
-            const totalSizeFormatted = document.getElementById('totalSize').textContent;
-            const suggestedMedia = document.getElementById('suggestedMedia').textContent;
-            const percentageOccupied = document.getElementById('percentageOccupied').textContent;
-
-            // Create the text to copy
-            let copyText = "=== SELECTED ITEMS ===\n\n";
-            
-            if (selectedItems.length === 0) {
-                copyText += "No selected items.\n\n";
-            } else {
-                selectedItems.forEach((item, index) => {
-                    copyText += `${index + 1}. ${item}\n`;
-                });
-            }
-
-            copyText += "\n=== SUMMARY ===\n";
-            copyText += `Total Size: ${totalSizeFormatted}\n`;
-            copyText += `Suggested Media: ${suggestedMedia}\n`;
-            copyText += `Percentage Occupied: ${percentageOccupied}\n`;
-
-            // Copy to clipboard
-            navigator.clipboard.writeText(copyText).then(() => {
-                // Show feedback to user
-                const button = document.getElementById('copyButton');
-                const originalText = button.textContent;
-                button.textContent = 'Copied!';
-                button.classList.remove('btn-primary');
-                button.classList.add('btn-success');
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.classList.remove('btn-success');
-                    button.classList.add('btn-primary');
-                }, 2000);
-            }).catch(err => {
-                console.error('Error copying to clipboard: ', err);
-                alert('Error copying to clipboard. Try again.');
-            });
-        }
-
-        // Attach event listeners to all checkboxes
-        document.addEventListener('DOMContentLoaded', () => {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="folder"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', calculateTotalSizeAndSuggestMedia);
-
-                // Display size next to each item title
-                const sizeInBytes = parseInt(checkbox.dataset.size);
-                const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2); // Convert bytes to GB
-                const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                if (label) {
-                    label.textContent += ` (${sizeInGB} GB)`;
-                }
-            });
-
-            // Add event listener to copy button
-            const copyButton = document.getElementById('copyButton');
-            copyButton.addEventListener('click', copyToClipboard);
-
-            // Add event listeners to sort controls
-            const sortBySelect = document.getElementById('sortBy');
-            const sortOrderSelect = document.getElementById('sortOrder');
-            
-            sortBySelect.addEventListener('change', sortItems);
-            sortOrderSelect.addEventListener('change', sortItems);
-
-            // Initial calculation on page load
-            calculateTotalSizeAndSuggestMedia();
-
-            // Initial sort on page load
-            sortItems();
+        checkboxes.forEach((checkbox) => {
+          if (checkbox.checked) {
+            totalSize += parseInt(checkbox.dataset.size);
+          }
         });
+
+        document.getElementById("totalSize").textContent =
+          formatBytes(totalSize);
+
+        let suggestedMedia = "No media found";
+        let mediaCapacity = 0;
+        for (const media in mediaCapacities) {
+          if (totalSize <= mediaCapacities[media]) {
+            suggestedMedia = media;
+            mediaCapacity = mediaCapacities[media];
+            break;
+          }
+        }
+        document.getElementById("suggestedMedia").textContent = suggestedMedia;
+
+        let percentageOccupied = 0;
+        if (totalSize > 0 && mediaCapacity > 0) {
+          percentageOccupied = (totalSize / mediaCapacity) * 100;
+        }
+        document.getElementById("percentageOccupied").textContent =
+          percentageOccupied.toFixed(2) + "%";
+      }
+
+      function sortItems() {
+        const sortBy = document.getElementById("sortBy").value;
+        const sortOrder = document.getElementById("sortOrder").value;
+        const container = document.getElementById("itemsContainer");
+        const items = Array.from(container.children);
+
+        items.sort((a, b) => {
+          let comparison = 0;
+
+          if (sortBy === "alphabetical") {
+            const labelA = a.querySelector("label").textContent;
+            const labelB = b.querySelector("label").textContent;
+            comparison = labelA.localeCompare(labelB);
+          } else if (sortBy === "size") {
+            const sizeA = parseInt(a.querySelector("input").dataset.size);
+            const sizeB = parseInt(b.querySelector("input").dataset.size);
+            comparison = sizeA - sizeB;
+          }
+
+          return sortOrder === "desc" ? -comparison : comparison;
+        });
+
+        // Clear container and re-append sorted items
+        container.innerHTML = "";
+        items.forEach((item) => {
+          container.appendChild(item);
+        });
+      }
+
+      function copyToClipboard() {
+        const checkboxes = document.querySelectorAll(
+          'input[type="checkbox"][name="folder"]'
+        );
+        const selectedItems = [];
+        let totalSize = 0;
+
+        // Collect selected items and calculate total size
+        checkboxes.forEach((checkbox) => {
+          if (checkbox.checked) {
+            const sizeInBytes = parseInt(checkbox.dataset.size);
+            const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2);
+            selectedItems.push(`${checkbox.value} (${sizeInGB} GB)`);
+            totalSize += sizeInBytes;
+          }
+        });
+
+        // Get summary information
+        const totalSizeFormatted =
+          document.getElementById("totalSize").textContent;
+        const suggestedMedia =
+          document.getElementById("suggestedMedia").textContent;
+        const percentageOccupied =
+          document.getElementById("percentageOccupied").textContent;
+
+        // Create the text to copy
+        let copyText = "=== SELECTED ITEMS ===\n\n";
+
+        if (selectedItems.length === 0) {
+          copyText += "No selected items.\n\n";
+        } else {
+          selectedItems.forEach((item, index) => {
+            copyText += `${index + 1}. ${item}\n`;
+          });
+        }
+
+        copyText += "\n=== SUMMARY ===\n";
+        copyText += `Total Size: ${totalSizeFormatted}\n`;
+        copyText += `Suggested Media: ${suggestedMedia}\n`;
+        copyText += `Percentage Occupied: ${percentageOccupied}\n`;
+
+        // Copy to clipboard
+        navigator.clipboard
+          .writeText(copyText)
+          .then(() => {
+            // Show feedback to user
+            const button = document.getElementById("copyButton");
+            const originalText = button.textContent;
+            button.textContent = "Copied!";
+            button.classList.remove("btn-primary");
+            button.classList.add("btn-success");
+
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove("btn-success");
+              button.classList.add("btn-primary");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Error copying to clipboard: ", err);
+            alert("Error copying to clipboard. Try again.");
+          });
+      }
+
+      // Attach event listeners to all checkboxes
+      document.addEventListener("DOMContentLoaded", () => {
+        const checkboxes = document.querySelectorAll(
+          'input[type="checkbox"][name="folder"]'
+        );
+        checkboxes.forEach((checkbox) => {
+          checkbox.addEventListener(
+            "change",
+            calculateTotalSizeAndSuggestMedia
+          );
+
+          // Display size next to each item title
+          const sizeInBytes = parseInt(checkbox.dataset.size);
+          const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2); // Convert bytes to GB
+          const label = document.querySelector(`label[for="${checkbox.id}"]`);
+          if (label) {
+            label.textContent += ` (${sizeInGB} GB)`;
+          }
+        });
+
+        // Add event listener to copy button
+        const copyButton = document.getElementById("copyButton");
+        copyButton.addEventListener("click", copyToClipboard);
+
+        // Add event listeners to sort controls
+        const sortBySelect = document.getElementById("sortBy");
+        const sortOrderSelect = document.getElementById("sortOrder");
+
+        sortBySelect.addEventListener("change", sortItems);
+        sortOrderSelect.addEventListener("change", sortItems);
+
+        // Initial calculation on page load
+        calculateTotalSizeAndSuggestMedia();
+
+        // Initial sort on page load
+        sortItems();
+      });
     </script>
-</body>
+  </body>
 </html>
