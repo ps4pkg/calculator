@@ -1409,66 +1409,96 @@
     </div>
 
     <script>
+      // --- GLOBAL CONSTANTS ---
       const mediaCapacities = {
         "DVD (Single Layer)": 4.7 * 1000 * 1000 * 1000, // 4.7 GB
-        //"DVD (Dual Layer)": 8.5 * 1000 * 1000 * 1000, // 8.5 GB
         "BD-R (Single Layer)": 25 * 1000 * 1000 * 1000, // 25 GB
-        //"BD-R (Dual Layer)": 50 * 1000 * 1000 * 1000, // 50 GB
         "HD 250GB": 250 * 1000 * 1000 * 1000,
         "HD 500GB": 500 * 1000 * 1000 * 1000,
         "HD 750GB": 750 * 1000 * 1000 * 1000,
-        "HD 1TB": 1 * 1000 * 1000 * 1000 * 1000,
-        "HD 2TB": 2 * 1000 * 1000 * 1000 * 1000,
-        "HD 4TB": 4 * 1000 * 1000 * 1000 * 1000,
-        "HD 8TB": 8 * 1000 * 1000 * 1000 * 1000,
+        "HD 1TB": 1000 * 1000 * 1000 * 1000,
+        "HD 2TB": 2000 * 1000 * 1000 * 1000,
+        "HD 4TB": 4000 * 1000 * 1000 * 1000,
+        "HD 8TB": 8000 * 1000 * 1000 * 1000,
       };
 
+      const mediaLimits = {
+        dvd: 4.7 * 1000 * 1000 * 1000,
+        bd25: 25 * 1000 * 1000 * 1000,
+        250: 250 * 1000 * 1000 * 1000,
+        500: 500 * 1000 * 1000 * 1000,
+        750: 750 * 1000 * 1000 * 1000,
+        1000: 1000 * 1000 * 1000 * 1000,
+      };
+
+      // --- HELPER FUNCTIONS ---
       function formatBytes(bytes, decimals = 2) {
         if (bytes === 0) return "0 Bytes";
-
         const k = 1000;
         const dm = decimals < 0 ? 0 : decimals;
         const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-
         return (
           parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
         );
       }
 
-      function calculateTotalSizeAndSuggestMedia() {
+      // --- CORE LOGIC ---
+      function updateSummaryAndSelectableItems() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const limitParam = urlParams.get("limit");
+        const limitSize = mediaLimits[limitParam];
+
         let totalSize = 0;
         const checkboxes = document.querySelectorAll(
           'input[type="checkbox"][name="folder"]'
         );
-
         checkboxes.forEach((checkbox) => {
           if (checkbox.checked) {
             totalSize += parseInt(checkbox.dataset.size);
           }
         });
 
-        document.getElementById("totalSize").textContent =
-          formatBytes(totalSize);
-
-        let suggestedMedia = "No media found";
-        let mediaCapacity = 0;
-        for (const media in mediaCapacities) {
-          if (totalSize <= mediaCapacities[media]) {
-            suggestedMedia = media;
-            mediaCapacity = mediaCapacities[media];
-            break;
-          }
-        }
-        document.getElementById("suggestedMedia").textContent = suggestedMedia;
-
+        let capacity = 0;
         let percentageOccupied = 0;
-        if (totalSize > 0 && mediaCapacity > 0) {
-          percentageOccupied = (totalSize / mediaCapacity) * 100;
+
+        if (limitSize) {
+          // Limit Mode
+          capacity = limitSize;
+          document.getElementById("suggestedMedia").textContent =
+            limitParam.toUpperCase();
+
+          // Update selectable items
+          checkboxes.forEach((cb) => {
+            if (!cb.checked) {
+              const itemSize = parseInt(cb.dataset.size);
+              cb.disabled = totalSize + itemSize > limitSize;
+            }
+          });
+        } else {
+          // Normal Mode
+          let suggestedMedia = "No media found";
+          for (const media in mediaCapacities) {
+            if (totalSize <= mediaCapacities[media]) {
+              suggestedMedia = media;
+              capacity = mediaCapacities[media];
+              break;
+            }
+          }
+          document.getElementById("suggestedMedia").textContent = suggestedMedia;
         }
+
+        // Update summary bar text and progress bar
+        if (totalSize > 0 && capacity > 0) {
+          percentageOccupied = (totalSize / capacity) * 100;
+        }
+        document.getElementById("totalSize").textContent = formatBytes(totalSize);
         document.getElementById("percentageOccupied").textContent =
           percentageOccupied.toFixed(2) + "%";
+
+        const bottomBar = document.querySelector(".fixed-bottom");
+        const progressBarPercentage = Math.min(percentageOccupied, 100);
+        bottomBar.style.background = `linear-gradient(to right, #198754 ${progressBarPercentage}%, #212529 ${progressBarPercentage}%)`;
       }
 
       function sortItems() {
@@ -1479,7 +1509,6 @@
 
         items.sort((a, b) => {
           let comparison = 0;
-
           if (sortBy === "alphabetical") {
             const labelA = a.querySelector("label").textContent;
             const labelB = b.querySelector("label").textContent;
@@ -1489,184 +1518,78 @@
             const sizeB = parseInt(b.querySelector("input").dataset.size);
             comparison = sizeA - sizeB;
           }
-
           return sortOrder === "desc" ? -comparison : comparison;
         });
 
-        // Clear container and re-append sorted items
         container.innerHTML = "";
-        items.forEach((item) => {
-          container.appendChild(item);
-        });
+        items.forEach((item) => container.appendChild(item));
       }
 
       function copyToClipboard() {
-        const checkboxes = document.querySelectorAll(
-          'input[type="checkbox"][name="folder"]'
-        );
         const selectedItems = [];
-        let totalSize = 0;
-
-        // Collect selected items and calculate total size
-        checkboxes.forEach((checkbox) => {
-          if (checkbox.checked) {
+        document
+          .querySelectorAll('input[type="checkbox"][name="folder"]:checked')
+          .forEach((checkbox) => {
             const sizeInBytes = parseInt(checkbox.dataset.size);
             const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2);
             selectedItems.push(`${checkbox.value} (${sizeInGB} GB)`);
-            totalSize += sizeInBytes;
-          }
+          });
+
+        const summaryText = `=== SELECTED ITEMS ===\n\n${
+          selectedItems.length > 0
+            ? selectedItems.map((item, index) => `${index + 1}. ${item}`).join("\n")
+            : "No selected items."
+        }\n\n=== SUMMARY ===\nTotal Size: ${document.getElementById("totalSize").textContent
+          }\nSuggested Media: ${document.getElementById("suggestedMedia").textContent
+          }\nPercentage Occupied: ${document.getElementById("percentageOccupied").textContent
+          }`;
+
+        navigator.clipboard.writeText(summaryText).then(() => {
+          const button = document.getElementById("copyButton");
+          const originalText = button.textContent;
+          button.textContent = "Copied!";
+          button.classList.replace("btn-primary", "btn-success");
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.replace("btn-success", "btn-primary");
+          }, 2000);
         });
-
-        // Get summary information
-        const totalSizeFormatted =
-          document.getElementById("totalSize").textContent;
-        const suggestedMedia =
-          document.getElementById("suggestedMedia").textContent;
-        const percentageOccupied =
-          document.getElementById("percentageOccupied").textContent;
-
-        // Create the text to copy
-        let copyText = "=== SELECTED ITEMS ===\n\n";
-
-        if (selectedItems.length === 0) {
-          copyText += "No selected items.\n\n";
-        } else {
-          selectedItems.forEach((item, index) => {
-            copyText += `${index + 1}. ${item}\n`;
-          });
-        }
-
-        copyText += "\n=== SUMMARY ===\n";
-        copyText += `Total Size: ${totalSizeFormatted}\n`;
-        copyText += `Suggested Media: ${suggestedMedia}\n`;
-        copyText += `Percentage Occupied: ${percentageOccupied}\n`;
-
-        // Copy to clipboard
-        navigator.clipboard
-          .writeText(copyText)
-          .then(() => {
-            // Show feedback to user
-            const button = document.getElementById("copyButton");
-            const originalText = button.textContent;
-            button.textContent = "Copied!";
-            button.classList.remove("btn-primary");
-            button.classList.add("btn-success");
-
-            setTimeout(() => {
-              button.textContent = originalText;
-              button.classList.remove("btn-success");
-              button.classList.add("btn-primary");
-            }, 2000);
-          })
-          .catch((err) => {
-            console.error("Error copying to clipboard: ", err);
-            alert("Error copying to clipboard. Try again.");
-          });
       }
 
-      // Attach event listeners to all checkboxes
+      // --- INITIALIZATION ---
       document.addEventListener("DOMContentLoaded", () => {
         const checkboxes = document.querySelectorAll(
           'input[type="checkbox"][name="folder"]'
         );
+        const urlParams = new URLSearchParams(window.location.search);
+        const limitParam = urlParams.get("limit");
+        const limitSize = mediaLimits[limitParam];
 
+        // Initial setup for each item
         checkboxes.forEach((checkbox) => {
-          // Display size next to each item title
           const sizeInBytes = parseInt(checkbox.dataset.size);
-          const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2); // Convert bytes to GB
+          const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2);
           const label = document.querySelector(`label[for="${checkbox.id}"]`);
           if (label) {
             label.textContent += ` (${sizeInGB} GB)`;
           }
+
+          // Hide items that are too large in limit mode
+          if (limitSize && sizeInBytes > limitSize) {
+            checkbox.parentElement.style.display = "none";
+          }
+
+          checkbox.addEventListener("change", updateSummaryAndSelectableItems);
         });
 
-        // Add event listener to copy button
-        const copyButton = document.getElementById("copyButton");
-        copyButton.addEventListener("click", copyToClipboard);
+        // Attach other event listeners
+        document.getElementById("copyButton").addEventListener("click", copyToClipboard);
+        document.getElementById("sortBy").addEventListener("change", sortItems);
+        document.getElementById("sortOrder").addEventListener("change", sortItems);
 
-        // Add event listeners to sort controls
-        const sortBySelect = document.getElementById("sortBy");
-        const sortOrderSelect = document.getElementById("sortOrder");
-
-        sortBySelect.addEventListener("change", sortItems);
-        sortOrderSelect.addEventListener("change", sortItems);
-
-        // Handle query string limit
-        const urlParams = new URLSearchParams(window.location.search);
-        const limitParam = urlParams.get("limit");
-
-        const mediaLimits = {
-          dvd: 4.7 * 1000 * 1000 * 1000,
-          bd25: 25 * 1000 * 1000 * 1000,
-          250: 250 * 1000 * 1000 * 1000,
-          500: 500 * 1000 * 1000 * 1000,
-          750: 750 * 1000 * 1000 * 1000,
-          1000: 1000 * 1000 * 1000 * 1000,
-        };
-
-        const limitSize = mediaLimits[limitParam];
-
-        if (limitSize) {
-          // Preset Media Mode is active
-          document.getElementById("suggestedMedia").textContent =
-            limitParam.toUpperCase();
-          // Initial filtering
-          checkboxes.forEach((checkbox) => {
-            const itemSize = parseInt(checkbox.dataset.size);
-            if (itemSize > limitSize) {
-              checkbox.parentElement.style.display = "none";
-            }
-          });
-
-          const updateSelectableItems = () => {
-            let currentSize = 0;
-            checkboxes.forEach((cb) => {
-              if (cb.checked) {
-                currentSize += parseInt(cb.dataset.size);
-              }
-            });
-
-            checkboxes.forEach((cb) => {
-              if (!cb.checked) {
-                const itemSize = parseInt(cb.dataset.size);
-                if (currentSize + itemSize > limitSize) {
-                  cb.disabled = true;
-                } else {
-                  cb.disabled = false;
-                }
-              }
-            });
-            let percentageOccupied = 0;
-            if (currentSize > 0 && limitSize > 0) {
-              percentageOccupied = (currentSize / limitSize) * 100;
-            }
-            document.getElementById("percentageOccupied").textContent =
-              percentageOccupied.toFixed(2) + "%";
-          };
-
-          checkboxes.forEach((checkbox) => {
-            checkbox.addEventListener("change", () => {
-              calculateTotalSizeAndSuggestMedia();
-              updateSelectableItems();
-            });
-          });
-
-          updateSelectableItems();
-        } else {
-          // Default behavior
-          checkboxes.forEach((checkbox) => {
-            checkbox.addEventListener(
-              "change",
-              calculateTotalSizeAndSuggestMedia
-            );
-          });
-        }
-
-        // Initial calculation on page load
-        calculateTotalSizeAndSuggestMedia();
-
-        // Initial sort on page load
+        // Initial page state
         sortItems();
+        updateSummaryAndSelectableItems();
       });
     </script>
   </body>
