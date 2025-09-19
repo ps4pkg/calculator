@@ -1569,12 +1569,8 @@
         const checkboxes = document.querySelectorAll(
           'input[type="checkbox"][name="folder"]'
         );
-        checkboxes.forEach((checkbox) => {
-          checkbox.addEventListener(
-            "change",
-            calculateTotalSizeAndSuggestMedia
-          );
 
+        checkboxes.forEach((checkbox) => {
           // Display size next to each item title
           const sizeInBytes = parseInt(checkbox.dataset.size);
           const sizeInGB = (sizeInBytes / (1000 * 1000 * 1000)).toFixed(2); // Convert bytes to GB
@@ -1594,6 +1590,77 @@
 
         sortBySelect.addEventListener("change", sortItems);
         sortOrderSelect.addEventListener("change", sortItems);
+
+        // Handle query string limit
+        const urlParams = new URLSearchParams(window.location.search);
+        const limitParam = urlParams.get("limit");
+
+        const mediaLimits = {
+          dvd: 4.7 * 1000 * 1000 * 1000,
+          bd25: 25 * 1000 * 1000 * 1000,
+          250: 250 * 1000 * 1000 * 1000,
+          500: 500 * 1000 * 1000 * 1000,
+          750: 750 * 1000 * 1000 * 1000,
+          1000: 1000 * 1000 * 1000 * 1000,
+        };
+
+        const limitSize = mediaLimits[limitParam];
+
+        if (limitSize) {
+          // Preset Media Mode is active
+          document.getElementById("suggestedMedia").textContent =
+            limitParam.toUpperCase();
+          // Initial filtering
+          checkboxes.forEach((checkbox) => {
+            const itemSize = parseInt(checkbox.dataset.size);
+            if (itemSize > limitSize) {
+              checkbox.parentElement.style.display = "none";
+            }
+          });
+
+          const updateSelectableItems = () => {
+            let currentSize = 0;
+            checkboxes.forEach((cb) => {
+              if (cb.checked) {
+                currentSize += parseInt(cb.dataset.size);
+              }
+            });
+
+            checkboxes.forEach((cb) => {
+              if (!cb.checked) {
+                const itemSize = parseInt(cb.dataset.size);
+                if (currentSize + itemSize > limitSize) {
+                  cb.disabled = true;
+                } else {
+                  cb.disabled = false;
+                }
+              }
+            });
+            let percentageOccupied = 0;
+            if (currentSize > 0 && limitSize > 0) {
+              percentageOccupied = (currentSize / limitSize) * 100;
+            }
+            document.getElementById("percentageOccupied").textContent =
+              percentageOccupied.toFixed(2) + "%";
+          };
+
+          checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", () => {
+              calculateTotalSizeAndSuggestMedia();
+              updateSelectableItems();
+            });
+          });
+
+          updateSelectableItems();
+        } else {
+          // Default behavior
+          checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener(
+              "change",
+              calculateTotalSizeAndSuggestMedia
+            );
+          });
+        }
 
         // Initial calculation on page load
         calculateTotalSizeAndSuggestMedia();
